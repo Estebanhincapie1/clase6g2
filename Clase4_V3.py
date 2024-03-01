@@ -28,11 +28,11 @@ class Sistema:
     def __init__(self):
         self.__lista_pacientes = [] 
         
-    def verificarPaciente(self,cedula):
-        for p in self.__lista_pacientes:
-            if cedula == p.verCedula():
-                return True 
+    def verificarPaciente(self,pCLAVE):
+        if pCLAVE in self.__lista_pacientes:
+            return True
         return False
+
         
     def ingresarPaciente(self,pac):
         self.__lista_pacientes.append(pac)
@@ -48,6 +48,8 @@ class Sistema:
             
     def verNumeroPacientes(self):
         print("En el sistema hay: " + str(len(self.__lista_pacientes)) + " pacientes") 
+    def verPacientes(self):
+        return self.__lista_pacientes
 
 def main():
     sis = Sistema() 
@@ -78,19 +80,36 @@ def main():
                 else:
                     print("No ingresado") 
         elif opcion == 2:
-            #1. solicito la cedula que quiero buscar
-            c = int(input("Ingrese la cedula a buscar: ")) 
-            #le pido al sistema que me devuelva en la variable p al paciente que tenga
-            #la cedula c en la lista
-            p = sis.verDatosPaciente(c) 
-            #2. si encuentro al paciente imprimo los datos
-            if p != None:
-                print("Nombre: " + p.verNombre()) 
-                print("Cedula: " + str(p.verCedula())) 
-                print("Genero: " + p.verGenero()) 
-                print("Servicio: " + p.verServicio()) 
-            else:
-                print("No existe un paciente con esa cedula") 
+            #1. solicito la cedula o el nombre que quiero buscar
+            c = input("Ingrese la cedula o el nombre a buscar: ")
+            j = c.lower().split(' ')
+
+            j.insert(-1,None)
+            j.insert(-1,None)
+            j.insert(-1,None)
+
+            for i in sis.verPacientes():
+                o = i.verNombre()
+                if c == str(i.verCedula()):
+                    k = int(c)
+                    p = sis.verDatosPaciente(k)
+
+                    print("Nombre: " + p.verNombre()) 
+                    print("Cedula: " + str(p.verCedula())) 
+                    print("Genero: " + p.verGenero()) 
+                    print("Servicio: " + p.verServicio())
+                
+                elif j[0] in o.lower().split(' ') or j[1] in o.lower().split(' ') or j[2] in o.lower().split(' ') or j[3] in o.lower().split(' '):
+                    x = i.verCedula()
+                    p = sis.verDatosPaciente(x) 
+
+                    print("Nombre: " + p.verNombre()) 
+                    print("Cedula: " + str(p.verCedula())) 
+                    print("Genero: " + p.verGenero()) 
+                    print("Servicio: " + p.verServicio())  
+                else:
+                    print("No existe un paciente con esa cedula") 
+                    break
         elif opcion !=0:
             continue 
         else:
@@ -101,5 +120,5 @@ if __name__ == "__main__":
     main() 
 
         
-# ESTE COMENTARIO ES DE PRUEBA PARA UN FORK
+
     
