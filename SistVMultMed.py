@@ -217,9 +217,7 @@ if __name__=='__main__':
 
 
 
-
-
-            
+# hay polimorfismo en los metodos como asignarNombre y su respectivo getter. 
 
                 
 
