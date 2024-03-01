@@ -2,12 +2,14 @@ class Medicamento:
     def __init__(self):
         self.__nombre = "" 
         self.__dosis = 0 
-    
+
+# getters
     def verNombre(self):
         return self.__nombre 
     def verDosis(self):
         return self.__dosis 
     
+#setters
     def asignarNombre(self,med):
         self.__nombre = med 
     def asignarDosis(self,med):
@@ -18,11 +20,12 @@ class Mascota:
     def __init__(self):
         self.__nombre= " "
         self.__historia=0
-        self.__tipo=" "
+        self.__tipo=0 # 1:caninos     2:felinos
         self.__peso=" "
         self.__fecha_ingreso=" "
         self.__lista_medicamentos=[]
-        
+
+ #getters       
     def verNombre(self):
         return self.__nombre
     def verHistoria(self):
@@ -35,7 +38,8 @@ class Mascota:
         return self.__fecha_ingreso
     def verLista_Medicamentos(self):
         return self.__lista_medicamentos 
-            
+
+#setters         
     def asignarNombre(self,n):
         self.__nombre=n
     def asignarHistoria(self,nh):
@@ -50,43 +54,62 @@ class Mascota:
         self.__lista_medicamentos = n 
     
 class sistemaV:
-    def __init__(self):
-        self.__lista_mascotas = []
+    def __init__(self) -> None:
+            self.__lista_mascotasCANINOS = {}
+            self.__lista_mascotasFELINOS = {}
+
+    def ingresarMascota(self,mascota):
+        if mascota.verTipo() == 1:
+            self.__lista_mascotasCANINOS[mascota.verHistoria()] = mascota
+            return True
+        elif mascota.verTipo() == 2:
+            self.__lista_mascotasFELINOS[mascota.verHistoria()] = mascota
+            return True 
+        else:
+            return False
     
     def verificarExiste(self,historia):
-        for m in self.__lista_mascotas:
-            if historia == m.verHistoria():
-                return True
-        #solo luego de haber recorrido todo el ciclo se retorna False
-        return False
+        if historia in self.__lista_mascotasCANINOS or historia in self.__lista_mascotasFELINOS:
+            return False
+        else:
+            return True
+        # for m in self.__lista_mascotas:
+        #     if historia == m.verHistoria():
+        #         return True
+        # #solo luego de haber recorrido todo el ciclo se retorna False
+        # return False
         
     def verNumeroMascotas(self):
-        return len(self.__lista_mascotas) 
+        return len(self.__lista_mascotasFELINOS + self.__lista_mascotasCANINOS) 
     
-    def ingresarMascota(self,mascota):
-        self.__lista_mascotas.append(mascota) 
+    
    
-
     def verFechaIngreso(self,historia):
         #busco la mascota y devuelvo el atributo solicitado
-        for masc in self.__lista_mascotas:
+        for masc in self.__lista_mascotasFELINOS and self.__lista_mascotasCANINOS:
             if historia == masc.verHistoria():
-                return masc.verFecha() 
-        return None
+                return masc.verFecha()
+            else:
+                return False
 
     def verMedicamento(self,historia):
         #busco la mascota y devuelvo el atributo solicitado
-        for masc in self.__lista_mascotas:
+        for masc in self.__lista_mascotasFELINOS and self.__lista_mascotasCANINOS:
             if historia == masc.verHistoria():
                 return masc.verLista_Medicamentos() 
-        return None
+            else:
+                return False
+            
     
     def eliminarMascota(self, historia):
-        for masc in self.__lista_mascotas:
+        for masc in self.__lista_mascotasFELINOS and self.__lista_mascotasCANINOS:
             if historia == masc.verHistoria():
-                self.__lista_mascotas.remove(masc)  #opcion con el pop
+                if masc.verTipo() == 1:
+                    self.__lista_mascotasFELINOS.remove(masc)  #opcion con el pop
+                else:
+                    self.__lista_mascotasCANINOS.remove(masc)
                 return True  #eliminado con exito
-        return False 
+            return False 
 
 def main():
     servicio_hospitalario = sistemaV()
@@ -105,22 +128,38 @@ def main():
                 print("No hay espacio ...") 
                 continue
             historia=int(input("Ingrese la historia clínica de la mascota: "))
-            #   verificacion=servicio_hospitalario.verDatosPaciente(historia)
-            if servicio_hospitalario.verificarExiste(historia) == False:
+
+            if servicio_hospitalario.verificarExiste(historia) == True: # si retorna True, no existe y puede ingresar
                 nombre=input("Ingrese el nombre de la mascota: ")
-                tipo=input("Ingrese el tipo de mascota (felino o canino): ")
+                while True:
+                    tipo = input("Ingrese el tipo de mascota (1-CANINO.  2-FELINO: ")
+                    if tipo == '1':
+                        tipo = 1
+                        break
+                    elif tipo == '2':
+                        tipo == 2
+                        break
+                    else:
+                        print('DATO MAL INGRESADO')
+                        continue
                 peso=int(input("Ingrese el peso de la mascota: "))
                 fecha=input("Ingrese la fecha de ingreso (dia/mes/año): ")
                 nm=int(input("Ingrese cantidad de medicamentos: "))
                 lista_med=[]
-
-                for i in range(0,nm):
-                    nombre_medicamentos = input("Ingrese el nombre del medicamento: ")
-                    dosis =int(input("Ingrese la dosis: "))
-                    medicamento = Medicamento()
-                    medicamento.asignarNombre(nombre_medicamentos)
-                    medicamento.asignarDosis(dosis)
-                    lista_med.append(medicamento)
+##########               PARAMETRO 1: no se puedan ingresar dos o mas medicamentos con el mismo nombre                ######################3
+                lisAUXILIAR = []
+                while len(lista_med) != nm:
+                    nombre_medicamento = input("Ingrese el nombre del medicamento: ")
+                    lisAUXILIAR.append(nombre_medicamento)
+                    if nombre_medicamento in lisAUXILIAR:
+                        print('EL MEDICAMENTO YA SE ENCUENTRA ASIGNADO')
+                        continue
+                    else:
+                        dosis =int(input("Ingrese la dosis: "))
+                        medicamento = Medicamento()
+                        medicamento.asignarNombre(nombre_medicamento)
+                        medicamento.asignarDosis(dosis)
+                        lista_med.append(medicamento)
 
                 mas= Mascota()
                 mas.asignarNombre(nombre)
