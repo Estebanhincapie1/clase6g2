@@ -58,7 +58,7 @@ def main():
         
         if opcion == 1:
             #ingreso pacientes
-            print("A continuacion se solicitaran los datos ...") 
+            print("A con tinuacion se solicitaran los datos ...") 
             #1. Se solicitan los datos
             cedula = int(input("Ingrese la cedula: ")) 
             if sis.verificarPaciente(cedula):
@@ -102,5 +102,4 @@ if __name__ == "__main__":
 
         
 # ESTE COMENTARIO ES DE PRUEBA PARA UN FORK
-    
     
